@@ -104,3 +104,48 @@ tipo = do string "Int"
 
 type2hask :: Parser Hasktype
 type2hask = sepBy tipo (symbol "->")
+
+tipo2 :: Parser Basetype
+tipo2 = do e <- natural
+           return DInt
+         <|> do symbol "'"
+                e <- identifier
+                symbol "'"
+                return DChar
+
+
+list2hask :: Parser Hasktype
+list2hask = do symbol "["
+               x <- sepBy tipo2 (symbol ",")
+               symbol "]"
+               return x
+
+--GRAMATICA
+-- t ==>  v ( '->' t | e)
+-- v ==> 'Int' | 'Char' | 'Float' | '(' t ')'
+
+
+tipo3 :: Parser Hasktype2
+tipo3 = do string "Int"
+           return DInt2
+         <|> do string "Float"
+                return DFloat2
+              <|> do string "Char"
+                     return DChar2
+
+
+fun2hask :: Parser Hasktype2
+fun2hask = do e <- value
+              (do symbol "->"
+                  t <- fun2hask
+                  return (Fun e t))
+               <|> return e
+
+
+value :: Parser Hasktype2
+value = do e <- tipo3
+           return e
+        <|> do symbol "("
+               e <- fun2hask
+               symbol ")"
+               return e

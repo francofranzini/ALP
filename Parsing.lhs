@@ -148,5 +148,8 @@ Ignoring spacing
 > data Expr = Num Int | BinOp Op Expr Expr deriving Show;
 > data Op = Add | Mul | Min | Div deriving Show
 
-> data Basetype = DInt | DChar | DFloat deriving Show;
-> type Hasktype = [Basetype] 
+> data Basetype = DInt | DChar | DFloat deriving Show
+
+> type Hasktype = [Basetype]
+
+> data Hasktype2 = DInt2 | DChar2 | DFloat2 | Fun Hasktype2 Hasktype2 deriving Show
